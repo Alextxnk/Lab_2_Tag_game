@@ -4,9 +4,9 @@
 	"description": "fifteen_start",
 	"repository": {
 		"type": "git",
-		"url": "git@github.com:liveldi/lab.webelart.git"
+		"url": "git@github.com:Alextxnk/Lab_2_Tag_game.git"
 	},
-	"author": "Elena Litvinova",
+	"author": "Alexey Solovyev",
 	"license": "ISC",
 	"engines": {
 		"node": ">=10",
