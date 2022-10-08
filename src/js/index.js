@@ -5,6 +5,7 @@ const containerNode = document.getElementById('fifteen');
 const itemNodes = Array.from(containerNode.querySelectorAll('.item'));
 const countItems = 16;
 
+// вывод ошибки в консоль
 if (itemNodes.length !== 16) {
    throw new Error(`Должно быть ровно ${countItems} элементов в HTML`);
 }
@@ -29,7 +30,24 @@ document.getElementById('shuffle').addEventListener('click', () => {
    console.log(matrix); // перемешанная матрица
    setPositionItems(matrix);
 });
+
 /** 3. Change position by click */
+const blankNumber = 16; // пустой квадрат 
+// делаем с помощью дилегирования событий
+containerNode.addEventListener('click', (event) => {
+   const buttonNode = event.target.closest('button');
+   if (!buttonNode) {
+      return;
+   }
+
+   const buttonNumber = Number(buttonNode.dataset.matrixId); // получаем номер, по которому кликнули
+   console.log(buttonNumber);
+   const buttonCoords = findCoordinatesByNumber(buttonNumber, matrix);
+   const blankCoords = findCoordinatesByNumber(blankNumber, matrix);
+   console.log(buttonCoords);
+   console.log(blankCoords);
+});
+
 /** 4. Change position by keydown */
 /** 5. Show won */
 
@@ -75,4 +93,15 @@ function shuffleArray(arr) {
       .map(value => ({ value, sort: Math.random() }))
       .sort((a, b) => a.sort - b.sort)
       .map(({ value }) => value);
+}
+
+function findCoordinatesByNumber(number, matrix) {
+   for (let y = 0; y < matrix.length; y++) {
+      for (let x = 0; x < matrix[y].length; x++) {
+         if (matrix[y][x] === number) {
+            return {x, y};
+         }
+      }
+   }
+   return null;
 }
