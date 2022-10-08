@@ -1,6 +1,7 @@
 'use strict';
 
 
+const gameNode = document.getElementById('game');
 const containerNode = document.getElementById('fifteen');
 const itemNodes = Array.from(containerNode.querySelectorAll('.item'));
 const countItems = 16;
@@ -20,21 +21,44 @@ console.log(matrix); // матрица 4х4
 setPositionItems(matrix);
 
 /** 2. Shuffle */
-document.getElementById('shuffle').addEventListener('click', () => {
-   const flatMatrix = matrix.flat(); // сделали одномерный массив из матрицы
-   // console.log(flatMatrix); // одномерный массив
+const maxShuffleCount = 100;
+let timer;
+let shuffled = false;
+const shuffledClassName = 'gameShuffle';
 
-   const shufledArray = shuffleArray(flatMatrix);
-   // console.log(shufledArray);
-   matrix = getMatrix(shufledArray);
-   console.log(matrix); // перемешанная матрица
-   setPositionItems(matrix);
+document.getElementById('shuffle').addEventListener('click', () => {
+   if (shuffled) {
+      return;
+   }
+
+   shuffled = true;
+   let shuffleCount = 0;
+   clearInterval(timer);
+   gameNode.classList.add(shuffledClassName);
+
+   if (shuffleCount === 0) {
+      timer = setInterval(() => {
+         randomSwap(matrix);
+         setPositionItems(matrix);
+
+         shuffleCount++;
+
+         if (shuffleCount >= maxShuffleCount) {
+            gameNode.classList.remove(shuffledClassName);
+            clearInterval(timer);
+            shuffled = false;
+         }
+      }, 70);
+   }
 });
 
 /** 3. Change position by click */
 const blankNumber = 16; // пустой квадрат 
 // делаем с помощью дилегирования событий
 containerNode.addEventListener('click', (event) => {
+   if (shuffled) {
+      return;
+   }
    const buttonNode = event.target.closest('button');
    if (!buttonNode) {
       return;
@@ -56,6 +80,10 @@ containerNode.addEventListener('click', (event) => {
 
 /** 4. Change position by arrows */
 window.addEventListener('keydown', (event) => {
+   if (shuffled) {
+      return;
+   }
+
    // console.log(event.key);
    if (!event.key.includes('Arrow')) {
       return;
@@ -95,10 +123,48 @@ window.addEventListener('keydown', (event) => {
    setPositionItems(matrix);
 });
 
-/** 5. Show won */
-
 
 /** Helpers */
+let blockedCoords = null;
+
+function randomSwap(matrix) {
+   const blankCoords = findCoordinatesByNumber(blankNumber, matrix);
+   // console.log(blankCoords);
+
+   const validCoords = findValidCoords({
+      blankCoords,
+      matrix,
+      blockedCoords
+   });
+
+   // console.log(validCoords);
+   // console.log(Math.floor(Math.random() * validCoords.length));
+   const swapCoords = validCoords[
+      Math.floor(Math.random() * validCoords.length)
+   ];
+
+   swap(blankCoords, swapCoords, matrix);
+   blockedCoords = blankCoords; // блокируем, уже сдвинутую кнопку
+}
+
+function findValidCoords({ blankCoords, matrix, blockedCoords }) {
+   const validCoords = [];
+
+   for (let y = 0; y < matrix.length; y++) {
+      for (let x = 0; x < matrix[y].length; x++) {
+         if (isValidForSwap({x, y}, blankCoords)) {
+            if (!blockedCoords || !(
+               blockedCoords.x === x && blockedCoords.y === y
+            )) {
+               validCoords.push({x, y});
+            }
+         }
+      }
+   }
+
+   return validCoords;
+}
+
 // создаем матрицу из массива
 function getMatrix(arr) {
    const matrix = [[], [], [], []];
