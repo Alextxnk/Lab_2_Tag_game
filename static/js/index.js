@@ -41,14 +41,22 @@ containerNode.addEventListener('click', (event) => {
    }
 
    const buttonNumber = Number(buttonNode.dataset.matrixId); // получаем номер, по которому кликнули
-   console.log(buttonNumber);
+
    const buttonCoords = findCoordinatesByNumber(buttonNumber, matrix);
    const blankCoords = findCoordinatesByNumber(blankNumber, matrix);
-   console.log(buttonCoords);
-   console.log(blankCoords);
+
+   const isValid = isValidForSwap(buttonCoords, blankCoords);
+   console.log(isValid);
+
+   if (isValid) {
+      swap(buttonCoords, blankCoords, matrix);
+      setPositionItems(matrix);
+   }
 });
 
 /** 4. Change position by keydown */
+
+
 /** 5. Show won */
 
 /** Helpers */
@@ -104,4 +112,18 @@ function findCoordinatesByNumber(number, matrix) {
       }
    }
    return null;
+}
+
+function isValidForSwap(coords1, coords2) {
+   const diffX = Math.abs(coords1.x - coords2.x);
+   const diffY = Math.abs(coords1.y - coords2.y);
+
+   // нужно чтобы разница по x или y была 1 и одна из координат совпадала
+   return (diffX === 1 || diffY === 1) && (coords1.x === coords2.x || coords1.y === coords2.y);
+}
+
+function swap(coords1, coords2, matrix) {
+   const coords1Number = matrix[coords1.y][coords1.x];
+   matrix[coords1.y][coords1.x] = matrix[coords2.y][coords2.x];
+   matrix[coords2.y][coords2.x] = coords1Number;
 }
