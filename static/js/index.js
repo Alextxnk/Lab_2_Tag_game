@@ -46,7 +46,7 @@ containerNode.addEventListener('click', (event) => {
    const blankCoords = findCoordinatesByNumber(blankNumber, matrix);
 
    const isValid = isValidForSwap(buttonCoords, blankCoords);
-   console.log(isValid);
+   // console.log(isValid);
 
    if (isValid) {
       swap(buttonCoords, blankCoords, matrix);
@@ -54,10 +54,49 @@ containerNode.addEventListener('click', (event) => {
    }
 });
 
-/** 4. Change position by keydown */
+/** 4. Change position by arrows */
+window.addEventListener('keydown', (event) => {
+   // console.log(event.key);
+   if (!event.key.includes('Arrow')) {
+      return;
+   }
 
+   const blankCoords = findCoordinatesByNumber(blankNumber, matrix);
+   const buttonCoords = {
+      x: blankCoords.x,
+      y: blankCoords.y
+   };
+   const direction = event.key.split('Arrow')[1].toLowerCase();
+   // console.log(direction);
+   const maxIndexMatrix = matrix.length;
+
+   switch (direction) {
+      case 'up':
+         buttonCoords.y += 1;
+         break;
+      case 'down':
+         buttonCoords.y -= 1;
+         break;
+      case 'left':
+         buttonCoords.x += 1;
+         break;
+      case 'right':
+         buttonCoords.x -= 1;
+         break;
+   }
+
+   if (buttonCoords.y >= maxIndexMatrix || buttonCoords.y < 0 ||
+      buttonCoords.x >= maxIndexMatrix || buttonCoords.x < 0) {
+      return;
+   }
+
+   // если все условия выполнились - меняем позицию
+   swap(buttonCoords, blankCoords, matrix);
+   setPositionItems(matrix);
+});
 
 /** 5. Show won */
+
 
 /** Helpers */
 // создаем матрицу из массива
@@ -97,7 +136,7 @@ function setNodeStyles(node, x, y) {
 }
 
 function shuffleArray(arr) {
-   return arr 
+   return arr
       .map(value => ({ value, sort: Math.random() }))
       .sort((a, b) => a.sort - b.sort)
       .map(({ value }) => value);
@@ -126,4 +165,33 @@ function swap(coords1, coords2, matrix) {
    const coords1Number = matrix[coords1.y][coords1.x];
    matrix[coords1.y][coords1.x] = matrix[coords2.y][coords2.x];
    matrix[coords2.y][coords2.x] = coords1Number;
+
+   if (isWon(matrix)) {
+      addWonClass();
+   }
+}
+
+const winFlatArr = new Array(16).fill(0).map((item, i) => i + 1);
+console.log(winFlatArr);
+
+function isWon(matrix) {
+   const flatMatrix = matrix.flat();
+   for (let i = 0; i < winFlatArr.length; i++) {
+      if (flatMatrix[i] !== winFlatArr[i]) {
+         return false;
+      }
+   }
+
+   return true;
+}
+
+const wonClass = 'fifteenWon';
+function addWonClass() {
+   setTimeout(() => {
+      containerNode.classList.add(wonClass);
+
+      setTimeout(() => {
+         containerNode.classList.remove(wonClass);
+      }, 1000);
+   }, 200);
 }
