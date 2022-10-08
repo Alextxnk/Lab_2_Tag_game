@@ -10,16 +10,19 @@ if (itemNodes.length !== 16) {
 }
 
 /** 1. Position */
+itemNodes[countItems - 1].style.display = 'none';
 let matrix = getMatrix(
    itemNodes.map((item) => Number(item.dataset.matrixId))
 );
-
-console.log(matrix);
 setPositionItems(matrix);
 
 /** 2. Shuffle */
+document.getElementById('shuffle').addEventListener('click', () => {
+   console.log(1);
+});
 /** 3. Change position by click */
 /** 4. Change position by keydown */
+/** 5. Show won */
 
 /** Helpers */
 function getMatrix(arr) {
