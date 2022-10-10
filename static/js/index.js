@@ -6,6 +6,16 @@ const containerNode = document.getElementById('fifteen');
 const itemNodes = Array.from(containerNode.querySelectorAll('.item'));
 const countItems = 16;
 
+// Timer fields 
+const minuteElement = document.querySelector('.minuteVal');
+const secondElement = document.querySelector('.secondVal');
+
+// Variables
+let minute = 0;
+let second = 0;
+let millisecond = 0;
+let interval;
+
 // вывод ошибки в консоль
 if (itemNodes.length !== 16) {
    throw new Error(`Должно быть ровно ${countItems} элементов в HTML`);
@@ -21,7 +31,7 @@ console.log(matrix); // матрица 4х4
 setPositionItems(matrix);
 
 /** 2. Shuffle */
-const maxShuffleCount = 100;
+const maxShuffleCount = 5;
 let timer;
 let shuffled = false;
 const shuffledClassName = 'gameShuffle';
@@ -44,6 +54,10 @@ document.getElementById('shuffle').addEventListener('click', () => {
          shuffleCount++;
 
          if (shuffleCount >= maxShuffleCount) {
+            clearInterval(interval);
+            clearFields();
+            interval = setInterval(startTimer, 10);
+
             gameNode.classList.remove(shuffledClassName);
             clearInterval(timer);
             shuffled = false;
@@ -227,13 +241,53 @@ function isValidForSwap(coords1, coords2) {
    return (diffX === 1 || diffY === 1) && (coords1.x === coords2.x || coords1.y === coords2.y);
 }
 
+let resultCount = 0;
+
 function swap(coords1, coords2, matrix) {
    const coords1Number = matrix[coords1.y][coords1.x];
    matrix[coords1.y][coords1.x] = matrix[coords2.y][coords2.x];
    matrix[coords2.y][coords2.x] = coords1Number;
 
+
    if (isWon(matrix)) {
-      addWonClass();
+      let result;
+      if (second <= 9) {
+         result = "00:0" + second;
+      }
+      if (second > 9 && second <= 59) {
+         result = "00:" + second;
+      }
+      if (minute <= 9 && second <= 9) {
+         result = "0" + minute + ":0" + second;
+      }
+      if ((minute > 9 && minute <= 59) && second <= 9) {
+         result = minute + ":0" + second;
+      }
+      if (minute <= 9 && (second > 9 && second <= 59)) {
+         result = "0" + minute + ":" + second;
+      }
+      if ((minute > 9 && minute <= 59) && (second > 9 && second <= 59)) {
+         result = minute + ":" + second;
+      }
+      console.log(result);
+
+      clearInterval(interval);
+      clearFields();
+
+      let name;
+      let resultInterval;
+      
+      if (result !== '00:00') {
+         resultCount++;
+         resultInterval = setTimeout(() => {
+            name = prompt('Поздравляю, вы победили, введите ваше имя:');
+            console.log(name);
+            localStorage.setItem(`name${resultCount}`, name);
+            localStorage.setItem(`result${resultCount}`, result);
+         }, 200);
+         
+         addWonClass();
+      }
    }
 }
 
@@ -260,4 +314,55 @@ function addWonClass() {
          containerNode.classList.remove(wonClass);
       }, 1000);
    }, 200);
+}
+
+
+// Timer
+// Listeners 
+const startButton = document.getElementById('show_table');
+startButton.addEventListener('click', () => {
+   /* clearInterval(interval);
+   interval = setInterval(startTimer, 10); */
+});
+
+function startTimer() {
+   millisecond++;
+
+   if (millisecond > 99) {
+      second++;
+      millisecond = 0;
+   }
+
+   // Seconds
+   if (second <= 9) {
+      secondElement.innerText = "0" + second;
+   } 
+   if (second > 9) {
+      secondElement.innerText = second;
+   } 
+   if (second > 59) {
+      minute++;
+      minuteElement.innerText = "0" + minute;
+      second = 0;
+      secondElement.innerText = "0" + second;
+   }
+
+   // Minutes
+   if (minute <= 9) {
+      minuteElement.innerText = "0" + minute;
+   } 
+   if (minute > 9) {
+      minuteElement.innerText = minute;
+   } 
+   if (minute > 59) {
+      return;
+   }
+}
+
+function clearFields() {
+   minute = 0;
+   second = 0;
+   millisecond = 0;
+   minuteElement.textContent = "00";
+   secondElement.textContent = "00";
 }
