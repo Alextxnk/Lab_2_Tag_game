@@ -31,7 +31,7 @@ console.log(matrix); // матрица 4х4
 setPositionItems(matrix);
 
 /** 2. Shuffle */
-const maxShuffleCount = 5;
+const maxShuffleCount = 100;
 let timer;
 let shuffled = false;
 const shuffledClassName = 'gameShuffle';
