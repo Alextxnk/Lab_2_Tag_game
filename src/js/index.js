@@ -31,7 +31,7 @@ console.log(matrix); // матрица 4х4
 setPositionItems(matrix);
 
 /** 2. Shuffle */
-const maxShuffleCount = 100;
+const maxShuffleCount = 10;
 let timer;
 let shuffled = false;
 const shuffledClassName = 'gameShuffle';
@@ -56,7 +56,7 @@ document.getElementById('shuffle').addEventListener('click', () => {
          if (shuffleCount >= maxShuffleCount) {
             clearInterval(interval);
             clearFields();
-            interval = setInterval(startTimer, 10);
+            interval = setInterval(startTimer, 1);
 
             gameNode.classList.remove(shuffledClassName);
             clearInterval(timer);
