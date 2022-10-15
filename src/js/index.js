@@ -31,7 +31,7 @@ console.log(matrix); // матрица 4х4
 setPositionItems(matrix);
 
 /** 2. Shuffle */
-const maxShuffleCount = 100;
+const maxShuffleCount = 5;
 let timer;
 let shuffled = false;
 const shuffledClassName = 'gameShuffle';
@@ -248,9 +248,9 @@ function swap(coords1, coords2, matrix) {
    matrix[coords1.y][coords1.x] = matrix[coords2.y][coords2.x];
    matrix[coords2.y][coords2.x] = coords1Number;
 
-
+let result;
+let name;
    if (isWon(matrix)) {
-      let result;
       if (second <= 9) {
          result = "00:0" + second;
       }
@@ -274,7 +274,6 @@ function swap(coords1, coords2, matrix) {
       clearInterval(interval);
       clearFields();
 
-      let name;
       let resultInterval;
       
       if (result !== '00:00') {
@@ -282,11 +281,12 @@ function swap(coords1, coords2, matrix) {
          resultInterval = setTimeout(() => {
             name = prompt('Поздравляю, вы победили, введите ваше имя:');
             console.log(name);
-            localStorage.setItem(`name${resultCount}`, name);
-            localStorage.setItem(`result${resultCount}`, result);
+
+            localStorage.setItem(name, result);
          }, 200);
          
          addWonClass();
+         // addTableResult();
       }
    }
 }
@@ -319,11 +319,30 @@ function addWonClass() {
 
 // Timer
 // Listeners 
-const startButton = document.getElementById('show_table');
-startButton.addEventListener('click', () => {
-   /* clearInterval(interval);
-   interval = setInterval(startTimer, 10); */
+const showTableButton = document.getElementById('show_table');
+const table = document.querySelector('.table');
+showTableButton.addEventListener('click', () => {
+   if (table.classList.value === 'table') {
+      table.classList.add('table__show');
+      table.classList.remove('table');
+      showTableButton.textContent = 'Скрыть таблицу рекордов';
+   } else if (table.classList.value === 'table__show') {
+      table.classList.add('table');
+      table.classList.remove('table__show');
+      showTableButton.textContent = 'Таблица рекордов';
+   }
 });
+
+const tbody = document.querySelector('.tbody');
+const tr = document.querySelector('.tr');
+
+function addTableResult() {
+   for (let i = 0; i < localStorage.length; i++) {
+      tbody.innerHTML += `<tr><th>${localStorage.key(i)}</th><th>${localStorage.getItem(localStorage.key(i))}</th></tr>`;
+   }
+}
+addTableResult();
+console.log(tbody);
 
 function startTimer() {
    millisecond++;

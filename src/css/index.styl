@@ -93,9 +93,20 @@ h1 {
 
 .table {
     display: none;
-    margin: 0 auto;
-    text-align: center;
-    user-select: none;
+
+    &__show {
+        margin: 0 auto;
+        text-align: center;
+        user-select: none;
+
+        thead {
+            font-weight: bold;
+        }
+
+        th {
+            padding: 0.1rem 0.5rem;
+        }
+    }
 } 
 
 .timer_container {
