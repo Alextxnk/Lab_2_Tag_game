@@ -335,6 +335,7 @@ showTableButton.addEventListener('click', () => {
 
 const tbody = document.querySelector('.tbody');
 const tr = document.querySelector('.tr');
+localStorage.clear();
 
 function addTableResult() {
    for (let i = 0; i < localStorage.length; i++) {
