@@ -322,6 +322,7 @@ function addWonClass() {
 const claearLocalStorageButton =  document.getElementById('claear_local_storage');
 const showTableButton = document.getElementById('show_table');
 const table = document.querySelector('.table');
+
 showTableButton.addEventListener('click', () => {
    if (table.classList.value === 'table') {
       table.classList.add('table__show');
