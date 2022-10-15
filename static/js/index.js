@@ -319,6 +319,7 @@ function addWonClass() {
 
 // Timer
 // Listeners 
+const claearLocalStorageButton =  document.getElementById('claear_local_storage');
 const showTableButton = document.getElementById('show_table');
 const table = document.querySelector('.table');
 showTableButton.addEventListener('click', () => {
@@ -326,16 +327,24 @@ showTableButton.addEventListener('click', () => {
       table.classList.add('table__show');
       table.classList.remove('table');
       showTableButton.textContent = 'Скрыть таблицу рекордов';
+      claearLocalStorageButton.classList.remove('button_hide');
    } else if (table.classList.value === 'table__show') {
       table.classList.add('table');
       table.classList.remove('table__show');
       showTableButton.textContent = 'Таблица рекордов';
+      claearLocalStorageButton.classList.add('button_hide');
+   }
+});
+
+claearLocalStorageButton.addEventListener('click', () => {
+   let ask = confirm('Вы действительно хотите очистить таблицу?');
+   if (ask === true) {
+      localStorage.clear();
    }
 });
 
 const tbody = document.querySelector('.tbody');
 const tr = document.querySelector('.tr');
-// localStorage.clear();
 
 function addTableResult() {
    for (let i = 0; i < localStorage.length; i++) {
