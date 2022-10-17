@@ -347,9 +347,11 @@ claearLocalStorageButton.addEventListener('click', () => {
 const tbody = document.querySelector('.tbody');
 const tr = document.querySelector('.tr');
 
+const hideThClass = 'hideTh'
+
 function addTableResult() {
    for (let i = 0; i < localStorage.length; i++) {
-      tbody.innerHTML += `<tr><th>${localStorage.key(i)}</th><th>${localStorage.getItem(localStorage.key(i))}</th></tr>`;
+      tbody.innerHTML += `<tr><th>${i + 1}</th><th>${localStorage.key(i)}</th><th>${localStorage.getItem(localStorage.key(i))}</th><th class="${hideThClass}">${i}</th></tr>`;
    }
 }
 addTableResult();
