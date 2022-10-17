@@ -243,6 +243,7 @@ function isValidForSwap(coords1, coords2) {
 
 let resultCount = 0;
 
+let secondsResult;
 function swap(coords1, coords2, matrix) {
    const coords1Number = matrix[coords1.y][coords1.x];
    matrix[coords1.y][coords1.x] = matrix[coords2.y][coords2.x];
@@ -253,21 +254,27 @@ let name;
    if (isWon(matrix)) {
       if (second <= 9) {
          result = "00:0" + second;
+         secondsResult = second;
       }
       if (second > 9 && second <= 59) {
          result = "00:" + second;
+         secondsResult = second;
       }
       if (minute <= 9 && second <= 9) {
          result = "0" + minute + ":0" + second;
+         secondsResult = minute * 60 + second;
       }
       if ((minute > 9 && minute <= 59) && second <= 9) {
          result = minute + ":0" + second;
+         secondsResult = minute * 60 + second;
       }
       if (minute <= 9 && (second > 9 && second <= 59)) {
          result = "0" + minute + ":" + second;
+         secondsResult = minute * 60 + second;
       }
       if ((minute > 9 && minute <= 59) && (second > 9 && second <= 59)) {
          result = minute + ":" + second;
+         secondsResult = minute * 60 + second;
       }
       console.log(result);
 
@@ -351,7 +358,10 @@ const hideThClass = 'hideTh'
 
 function addTableResult() {
    for (let i = 0; i < localStorage.length; i++) {
-      tbody.innerHTML += `<tr><th>${i + 1}</th><th>${localStorage.key(i)}</th><th>${localStorage.getItem(localStorage.key(i))}</th><th class="${hideThClass}">${i}</th></tr>`;
+      let key = localStorage.key(i);
+      let value = localStorage.getItem(localStorage.key(i));
+      console.log(value);
+      tbody.innerHTML += `<tr><th>${i + 1}</th><th>${key}</th><th>${value}</th><th class="${hideThClass}">${i}</th></tr>`;
    }
 }
 addTableResult();
