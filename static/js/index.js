@@ -31,7 +31,7 @@ console.log(matrix); // матрица 4х4
 setPositionItems(matrix);
 
 /** 2. Shuffle */
-const maxShuffleCount = 5; // количество замешиваний 
+const maxShuffleCount = 100; // количество замешиваний 
 let timer;
 let shuffled = false;
 const shuffledClassName = 'gameShuffle';
@@ -354,7 +354,7 @@ claearLocalStorageButton.addEventListener('click', () => {
 const tbody = document.querySelector('.tbody');
 const tr = document.querySelector('.tr');
 
-const hideThClass = 'hideTh'
+const hideThClass = 'hideTh';
 
 function addTableResult() {
    for (let i = 0; i < localStorage.length; i++) {
